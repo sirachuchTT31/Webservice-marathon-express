@@ -51,6 +51,7 @@ exports.create = async (req, res) => {
         }
     }
     catch (e) {
+        res.status(500)
         console.log(e)
     }
 }
@@ -59,11 +60,7 @@ exports.update = async (req, res) => {
         if (req.body != null) {
             let _id = req.body.admin_id
             //fetch update 
-            const salt = await bcrypt.genSalt(10)
-            let encryptedPassword = await bcrypt.hash(req.body.admin_password, salt)
             let rs_admin = await adminModel.update({
-                admin_username: req.body.admin_username,
-                admin_password: encryptedPassword,
                 admin_name: req.body.admin_name,
                 admin_lastname: req.body.admin_lastname,
                 admin_tel: req.body.admin_tel,
@@ -76,7 +73,17 @@ exports.update = async (req, res) => {
                         admin_id: _id
                     }
                 })
-            if (rs_admin) {
+            let rs_auth = await authModel.update({
+                name: req.body.admin_name,
+                lastname: req.body.admin_lastname,
+                avatar: req.body.admin_avatar,
+            },
+                {
+                    where: {
+                        auth_id: _id
+                    }
+                })
+            if (rs_admin && rs_auth) {
                 res.json({
                     status: true,
                     status_code: 200,
@@ -93,12 +100,60 @@ exports.update = async (req, res) => {
         }
     }
     catch (e) {
+        res.json({
+            status: false,
+            status_code: 500,
+            message: e.message
+        })
+        console.log(e)
+    }
+}
+exports.remove = async (req, res) => {
+    try {
+        if (req.body.admin_id != null) {
+            let params = req.body.admin_id
+            console.log(params)
+            let new_admin = await adminModel.destroy({
+                where: {
+                    admin_id: params
+                }
+            })
+            let new_auth = await authModel.destroy({
+                where: {
+                    auth_id: params
+                }
+            })
+                if (new_admin && new_auth) {
+                    res.json({
+                        status: true,
+                        status_code: 200,
+                        message: "Delete data successfully ",
+                        result: null
+                    })
+                }
+                else {
+                    res.json({
+                        status: false,
+                        status_code: 400,
+                        message: "Error deleting data",
+                        result: null,
+                    })
+                }
+        }
+        else {
+
+        }
+    }
+    catch (e) {
+        res.status(500)
         console.log(e)
     }
 }
 exports.getAll = async (req, res) => {
     try {
-        let newAdmin = await adminModel.findAll()
+        let newAdmin = await adminModel.findAll({
+            order: [["createdAt", "DESC"]],
+        })
         if (newAdmin) {
             res.json({
                 status: true,
@@ -106,6 +161,10 @@ exports.getAll = async (req, res) => {
                 message: "Selected all admin successfully",
                 result: newAdmin
             })
+        }
+        else {
+            res.status(500)
+            res.status(400)
         }
 
     }
