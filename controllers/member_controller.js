@@ -3,6 +3,7 @@ let authModel = require('../models/auth_model.js')
 // const Cryptr = require('cryptr');
 // const cryptr = new Cryptr('myTotallySecretKey', { encoding: 'base64', pbkdf2Iterations: 10000, saltLength: 10 });
 const bcrypt = require('bcryptjs')
+let { message_status_400_remove } = require('../shared/status_message_func.js')
 exports.create = async (req, res) => {
     try {
         if (req.body) {
@@ -56,10 +57,97 @@ exports.create = async (req, res) => {
         console.log(e)
     }
 }
+exports.update = async (req, res) => {
+    try {
+        if (req.body != null) {
+            let _id = req.body.member_id
+            let new_member = await memberModel.update({
+                member_name: req.body.member_name,
+                member_lastname: req.body.member_lastname,
+                member_tel: req.body.member_tel,
+                member_adress: req.body.member_address,
+                member_email: req.body.member_email,
+                member_avatar: req.body.member_avatar
+            }, {
+                where: {
+                    member_id: _id
+                }
+            })
+            let new_auth = await authModel.update({
+                name: req.body.member_name,
+                lastname: req.body.member_lastname,
+                avatar: req.body.member_avatar
+            },
+                {
+                    where: {
+                        auth_id: _id
+                    }
+                })
+            if (new_member && new_auth) {
+                res.json({
+                    status: true,
+                    status_code: 200,
+                    message: "Update member successfully",
+                    result: _id
+                })
+            }
+            else {
+                res.status(400)
+            }
+        }
+        else {
+            res.status(400)
+        }
+    }
+    catch (e) {
+        res.status(500)
+    }
+}
+exports.remove = async (req, res) => {
+    try {
+        if (req.body.member_id != null) {
+            let _id = req.body.member_id
+            let rs_member = await memberModel.destroy({
+                where: {
+                    member_id: _id
+                }
+            })
+            let rs_auth = await authModel.destroy({
+                where: {
+                    auth_id: _id
+                }
+            })
+            if (rs_member && rs_auth) {
+                res.json({
+                    status: true,
+                    status_code: 200,
+                    message: "Delete member successfully",
+                    result: _id
+                })
+            }
+            else {
+                res.json({
+                    status: false,
+                    status_code: 400,
+                    message: "Error deleting data",
+                    result: null,
+                })
+            }
+        }
+        else {
+            res.status(400)
+        }
+    }
+    catch (e) {
+        res.status(500)
+    }
+}
 exports.getAll = async (req, res) => {
     try {
 
-        let member = await memberModel.findAll()
+        let member = await memberModel.findAll({
+            order: [["createdAt", "DESC"]],
+        })
         res.json({
             status: true,
             status_code: 200,

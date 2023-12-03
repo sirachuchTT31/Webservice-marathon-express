@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs')
 exports.create = async (req, res) => {
     try {
         if (req.body != null) {
+            console.log(req.body)
             let admin_id_auto_complies = "ADMIN"
             let math = Math.random() * 10000000
             let newmath = Math.ceil(math)

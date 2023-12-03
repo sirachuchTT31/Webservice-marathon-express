@@ -1,5 +1,6 @@
 let authModel = require('../models/auth_model.js')
 let organizerModel = require('../models/organizer_model.js')
+// let { message_status_400_remove } = require('../shared/status_message_func.js')
 // const Cryptr = require('cryptr');
 // const cryptr = new Cryptr('myTotallySecretKey', { encoding: 'base64', pbkdf2Iterations: 10000, saltLength: 10 });
 const bcrypt = require('bcryptjs')
@@ -11,7 +12,7 @@ exports.create = async (req, res) => {
             let newmath = Math.ceil(math)
             let new_organizer_id_auto_complies = organizer_id_auto_complies + String(newmath)
             const salt = await bcrypt.genSalt(10)
-            let encryptedPassword = await bcrypt.hash(req.body.organ_password,salt)
+            let encryptedPassword = await bcrypt.hash(req.body.organ_password, salt)
             let new_organizer = {
                 organ_id: new_organizer_id_auto_complies,
                 organ_username: req.body.organ_username,
@@ -55,3 +56,109 @@ exports.create = async (req, res) => {
         console.log(e)
     }
 }
+exports.update = async (req, res) => {
+    try {
+        if (req.body != null) {
+            let _id = req.body.organ_id
+            let rs_organ = await organizerModel.update({
+                organ_name: req.body.organ_name,
+                organ_lastname: req.body.organ_lastname,
+                organ_tel: req.body.organ_tel,
+                organ_address: req.body.organ_address,
+                organ_email: req.body.organ_email,
+                organ_avatar: req.body.organ_avatar
+            },
+                {
+                    where: {
+                        organ_id: _id
+                    }
+                })
+            let rs_auth = await authModel.update({
+                name: req.body.organ_name,
+                lastname: req.body.organ_lastname,
+                avatar: req.body.organ_avatar
+            }, {
+                where: {
+                    auth_id: _id
+                }
+            })
+            if (rs_organ && rs_auth) {
+                res.json({
+                    status: true,
+                    status_code: 200,
+                    message: "Update organization successfully",
+                    result: null
+                })
+            }
+            else {
+                res.status(400)
+            }
+        } else {
+            res.status(400)
+        }
+    }
+    catch (e) {
+        res.status(500)
+    }
+}
+exports.remove = async (req, res) => {
+    try {
+        if (req.body.organ_id != null) {
+            let _id = req.body.organ_id
+            let rs_organ = await organizerModel.destroy({
+                where: {
+                    organ_id: _id
+                }
+            })
+            let rs_auth = await authModel.destroy({
+                where: {
+                    auth_id: _id
+                }
+            })
+            if (rs_organ && rs_auth) {
+                res.json({
+                    status: true,
+                    status_code: 200,
+                    message: "delete organizer successfully deleted",
+                    result: _id
+                })
+            }
+            else {
+                res.json({
+                    status: false,
+                    status_code: 400,
+                    message: "Error deleting data",
+                    result: null,
+                })
+            }
+        }
+        else {
+            res.status(400)
+        }
+    }
+    catch (e) {
+        res.status(500)
+    }
+}
+exports.getAll = async (req, res) => {
+    try {
+        let new_organizer = await organizerModel.findAll({
+            order: [["createdAt", "DESC"]],
+        })
+        if (new_organizer) {
+            res.json({
+                status: true,
+                status_code: 200,
+                message: "Selected all organizer successfully",
+                result: new_organizer
+            })
+        }
+        else {
+            res.status(400)
+        }
+    }
+    catch (e) {
+        res.status(500)
+    }
+}
+
