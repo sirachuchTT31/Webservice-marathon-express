@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+let formidable = require('formidable');
+let fs = require('fs')
 let memberModel = require('../models/member_model.js')
 let authModel = require('../models/auth_model.js')
 let organizerModel = require('../models/organizer_model.js')
@@ -134,6 +136,59 @@ exports.registerMember = async (req, res) => {
         console.log(e)
     }
 }
+
+exports.updateImgprofilemember = async (req, res) => {
+    try {
+        if (req.body != null) {
+            let form = new formidable.IncomingForm()
+            form.parse(req, function (err, fields, files) {
+                console.log(fields.member_id)
+                let oldPath
+                let newUrlpath
+                files.fileUpload.map((x) => oldPath = x.filepath)
+                files.fileUpload.map((x) => newUrlpath = x.originalFilename)
+                let newPath = 'D:/project_clone_git/marathon_v2_web/src/assets/img/' + newUrlpath
+                console.log("newPath", newPath)
+                let rawData = fs.readFileSync(oldPath)
+                fs.writeFile(newPath, rawData, async function (err) {
+                    htmlPath = '../../../../assets/img/' + newUrlpath
+                    if (err) throw err
+                    let res_member = await memberModel.update({
+                        member_avatar: htmlPath
+                    }, {
+                        where: {
+                            member_id: fields.member_id
+                        }
+                    })
+                    let res_auth = await authModel.update({
+                        avatar: htmlPath
+                    }, {
+                        where: {
+                            auth_id: fields.member_id
+                        }
+                    })
+                    if (res_member != null && res_auth != null) {
+                        res.json({
+                            status: true,
+                            status_code: 200,
+                            message: "Upload file successfully",
+                            result: fields.member_id
+                        })
+                    }
+
+                })
+            }
+            )
+
+        }
+    }
+    catch (e) {
+        res.status(500)
+        console.log(e.message)
+    }
+}
+
+
 
 exports.registerOrganizer = async (req, res) => {
     try {
