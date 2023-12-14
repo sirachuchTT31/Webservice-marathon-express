@@ -139,7 +139,7 @@ exports.registerMember = async (req, res) => {
 
 exports.updateImgprofilemember = async (req, res) => {
     try {
-        if (req.body != null) {
+        if (req.body) {
             let form = new formidable.IncomingForm()
             form.parse(req, function (err, fields, files) {
                 console.log(fields.member_id)
@@ -188,7 +188,54 @@ exports.updateImgprofilemember = async (req, res) => {
     }
 }
 
-
+exports.updateprofileMember = async (req, res) => {
+    try {
+        if (req.body) {
+            let _id = req.body.member_id
+            let res_member = await memberModel.update({
+                member_name: req.body.member_name,
+                member_lastname: req.body.member_lastname,
+                member_tel: req.body.member_tel,
+                member_adress: req.body.member_address,
+                member_email: req.body.member_email,
+                member_avatar: req.body.member_avatar
+            },
+                {
+                    where: {
+                        member_id: _id
+                    }
+                })
+            console.log("res_member", res_member)
+            let res_auth = await authModel.update({
+                name: req.body.member_name,
+                lastname: req.body.member_lastname,
+                avatar: req.body.member_avatar
+            }, {
+                where: {
+                    auth_id: _id
+                }
+            })
+            if (res_member != null && res_auth != null) {
+                res.json({
+                    status: true,
+                    status_code: 200,
+                    message: 'Update profile successfully.',
+                    result: null
+                })
+            }
+            else {
+                res.status(400)
+            }
+        }
+        else {
+            res.status(500)
+        }
+    }
+    catch (e) {
+        console.log(e)
+        res.status(500)
+    }
+}
 
 exports.registerOrganizer = async (req, res) => {
     try {
