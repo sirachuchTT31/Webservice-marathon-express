@@ -30,7 +30,6 @@ exports.register_event = async (req, res) => {
                 trans_status: "01",
                 auth_id: req.body.auth_id
             }
-            console.log("new_reg", new_reg)
             let response_transaction = await transactions_model.create(new_trans)
             if (response_transaction != null) {
                 let response_reg_running_event = await reg_running_event_model.create(new_reg)
