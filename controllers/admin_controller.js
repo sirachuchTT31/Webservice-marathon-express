@@ -4,7 +4,7 @@ let authModel = require('../models/auth_model.js');
 const bcrypt = require('bcryptjs')
 exports.create = async (req, res) => {
     try {
-        if (req.body != null) {
+        if (req.body) {
             let checkDuplicate = await adminModel.findAll({
                 where: {
                     admin_username: req.body.admin_username
@@ -73,7 +73,7 @@ exports.create = async (req, res) => {
 }
 exports.update = async (req, res) => {
     try {
-        if (req.body != null) {
+        if (req.body ) {
             let _id = req.body.admin_id
             //fetch update 
             let rs_admin = await adminModel.update({
@@ -126,7 +126,7 @@ exports.update = async (req, res) => {
 }
 exports.remove = async (req, res) => {
     try {
-        if (req.body.admin_id != null) {
+        if (req.body.admin_id ) {
             let params = req.body.admin_id
             console.log(params)
             let new_admin = await adminModel.destroy({

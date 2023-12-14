@@ -2,7 +2,7 @@
 const bcrypt = require('bcryptjs')
 exports.decrypt = async (req, res) => {
     try {
-        if (req.body != null) {
+        if (req.body) {
             let decrypt_pass = await bcrypt.compare(req.body.password,salt)
             console.log(decrypt_pass)
             if (decrypt_pass) {

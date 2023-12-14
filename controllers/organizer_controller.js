@@ -73,7 +73,7 @@ exports.create = async (req, res) => {
 }
 exports.update = async (req, res) => {
     try {
-        if (req.body != null) {
+        if (req.body) {
             let _id = req.body.organ_id
             let rs_organ = await organizerModel.update({
                 organ_name: req.body.organ_name,
@@ -118,7 +118,7 @@ exports.update = async (req, res) => {
 }
 exports.remove = async (req, res) => {
     try {
-        if (req.body.organ_id != null) {
+        if (req.body.organ_id) {
             let _id = req.body.organ_id
             let rs_organ = await organizerModel.destroy({
                 where: {

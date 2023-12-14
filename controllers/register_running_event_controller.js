@@ -3,7 +3,7 @@ let transactions_model = require('../models/transactions_model.js')
 const db = require('../config/config_db.js')
 exports.register_event = async (req, res) => {
     try {
-        if (req.body != null) {
+        if (req.body) {
             console.log("req.body", req.body)
             let todo = "create_register_running_event_01"
             let reg_id_auto_complies = "REG_EVENT"

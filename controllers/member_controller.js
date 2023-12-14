@@ -74,7 +74,7 @@ exports.create = async (req, res) => {
 }
 exports.update = async (req, res) => {
     try {
-        if (req.body != null) {
+        if (req.body) {
             let _id = req.body.member_id
             let new_member = await memberModel.update({
                 member_name: req.body.member_name,
@@ -120,7 +120,7 @@ exports.update = async (req, res) => {
 }
 exports.remove = async (req, res) => {
     try {
-        if (req.body.member_id != null) {
+        if (req.body.member_id) {
             let _id = req.body.member_id
             let rs_member = await memberModel.destroy({
                 where: {

@@ -3,7 +3,7 @@ let masterlocationModel = require('../models/master_location_model.js')
 //location crud
 exports.createLocation = async (req, res) => {
     try {
-        if (req.body != null) {
+        if (req.body) {
             let location_id_auto_complies = "LOCATION"
             let math = Math.random() * 10000000
             let newmath = Math.ceil(math)
