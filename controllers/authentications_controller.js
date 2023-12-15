@@ -5,6 +5,7 @@ let fs = require('fs')
 let memberModel = require('../models/member_model.js')
 let authModel = require('../models/auth_model.js')
 let organizerModel = require('../models/organizer_model.js')
+// let { isEmpty } = require('../shared/global_func.js')
 exports.login = async (req, res) => {
     try {
         let { username, password } = req.body
@@ -237,6 +238,20 @@ exports.updateprofileMember = async (req, res) => {
     }
 }
 
+exports.getprofileMember = async (req, res) => {
+    try {
+        if (isEmpty(req.body.member_id)) {
+            
+        }
+        else {
+            res.status(500)
+        }
+    }
+    catch (e) {
+        res.status(500)
+        console.log(e.message)
+    }
+}
 exports.registerOrganizer = async (req, res) => {
     try {
         if (req.body) {
