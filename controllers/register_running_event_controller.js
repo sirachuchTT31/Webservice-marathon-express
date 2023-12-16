@@ -1,11 +1,10 @@
 let reg_running_event_model = require('../models/register_running_event_model.js')
 let transactions_model = require('../models/transactions_model.js')
 const db = require('../config/config_db.js')
-exports.register_event = async (req, res) => {
+exports.create_event = async (req, res) => {
     try {
         if (req.body) {
-            console.log("req.body", req.body)
-            let todo = "create_register_running_event_01"
+            let todo = "Waiting_for_approval_organizer_01"
             let reg_id_auto_complies = "REG_EVENT"
             let trans_id_auto_complies = "TRANS"
             let math = Math.random() * 10000000
@@ -60,11 +59,41 @@ exports.register_event = async (req, res) => {
     }
 }
 
+exports.getregbyOrganizer = async (req, res) => {
+    try {
+        // if (req.body) {
+        //     if (req.body.organ_id != null) {
+        let _id = req.params.id
+        console.log("_id", _id)
+        let query_reg = await db.query('CALL Sp_getregbyorganizer(' + "'" + _id + "'" + ')')
+        if (query_reg) {
+            res.json({
+                status: true,
+                status_code: 200,
+                message: 'Selected Register_running_event by organzer',
+                result: query_reg
+            })
+        }
+        else {
+            res.status(400)
+        }
+        //     }
+        // }
+        // else {
+        //     res.status(500)
+        // }
+    }
+    catch (e) {
+        res.status(500)
+    }
+}
+
 exports.getAll = async (req, res) => {
     try {
         let [response_req_running_event] = await db.query(
             "SELECT * FROM tb_register_running_events RIGHT JOIN tb_master_locations ON tb_register_running_events.location_id = tb_master_locations.location_id ORDER BY tb_register_running_events.createdAt DESC;"
         )
+        console.log(response_req_running_event)
         // let response_req_running_event = await reg_running_event_model.findAll({
         //     include: {
         //         model : location_model,
@@ -88,6 +117,7 @@ exports.getAll = async (req, res) => {
         res.status(500)
     }
 }
+
 
 exports.getbyId = async (req, res) => {
     try {
