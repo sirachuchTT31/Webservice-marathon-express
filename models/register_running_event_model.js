@@ -5,6 +5,7 @@ const transaction_model = require('./transactions_model.js')
 const register_running_event = db.define('tb_register_running_events', {
     reg_event_id: { type: sequelize.STRING, primaryKey: true },
     reg_event_name: { type: sequelize.STRING },
+    reg_event_due_date: { type: sequelize.DATE },
     reg_event_price: { type: sequelize.DOUBLE },
     reg_event_amount: { type: sequelize.INTEGER },
     reg_event_detail: { type: sequelize.STRING },
