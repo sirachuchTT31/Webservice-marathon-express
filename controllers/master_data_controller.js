@@ -38,3 +38,25 @@ exports.createLocation = async (req, res) => {
         console.log(e)
     }
 }
+
+exports.getallLocation = async (req, res) => {
+    try {
+        let res_location = await masterlocationModel.findAll({
+            order: [["location_province", "ASC"]],
+        })
+        if (res_location) {
+            res.json({
+                status: true,
+                status_code: 200,
+                message: 'Select all master location succesfully',
+                result: res_location
+            })
+        }
+        else {
+            res.status(500)
+        }
+    }
+    catch (e) {
+        res.status(500)
+    }
+}
