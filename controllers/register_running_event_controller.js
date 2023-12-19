@@ -1,6 +1,8 @@
 let reg_running_event_model = require('../models/register_running_event_model.js')
 let transactions_model = require('../models/transactions_model.js')
 const db = require('../config/config_db.js')
+let formidable = require('formidable');
+let fs = require('fs')
 exports.create_event = async (req, res) => {
     try {
         if (req.body) {
@@ -14,6 +16,7 @@ exports.create_event = async (req, res) => {
             let new_reg = {
                 reg_event_id: new_reg_id_auto_complies,
                 reg_event_name: req.body.reg_event_name,
+                reg_event_due_date: req.body.reg_event_due_date,
                 reg_event_price: parseFloat(req.body.reg_event_price).toFixed(2),
                 reg_event_amount: req.body.reg_event_amount,
                 reg_event_detail: req.body.reg_event_detail,
@@ -52,6 +55,50 @@ exports.create_event = async (req, res) => {
         }
         else {
             res.status(500)
+        }
+    }
+    catch (e) {
+        res.status(500)
+    }
+}
+
+exports.uploadimg_event = async (req, res) => {
+    try {
+        if (req.body) {
+            let form = new formidable.IncomingForm()
+            form.parse(req, function (err, fields, files) {
+                let oldPath
+                let newUrlpath
+                let reg_event_id
+                console.log(files)
+                files.fileUpload.map((x) => oldPath = x.filepath)
+                files.fileUpload.map((x) => newUrlpath = x.originalFilename)
+                fields.reg_event_id.forEach((x) => { reg_event_id = x })
+                let math = Math.random() * 10000000
+                let newmath = Math.ceil(math).toString()
+                let newPath = 'D:/project_clone_git/marathon_v2_web/src/assets/img/reg_by_organizer/' + newmath + newUrlpath
+                let rawData = fs.readFileSync(oldPath)
+                fs.writeFile(newPath, rawData, async function (err) {
+                    htmlPath = '../../../../assets/img/reg_by_organizer/' + newmath + newUrlpath
+                    if (err) throw err
+                    let res_reg = await reg_running_event_model.update({
+                        reg_event_path_img: htmlPath
+                    },
+                        {
+                            where: {
+                                reg_event_id: reg_event_id
+                            }
+                        })
+                    if (res_reg != null) {
+                        res.json({
+                            status: true,
+                            status_code: 200,
+                            message: 'Created register running evnet successfully',
+                            result: null,
+                        })
+                    }
+                })
+            })
         }
     }
     catch (e) {
