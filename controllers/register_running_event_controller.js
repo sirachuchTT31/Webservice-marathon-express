@@ -137,17 +137,9 @@ exports.getregbyOrganizer = async (req, res) => {
 
 exports.getAll = async (req, res) => {
     try {
-        let [response_req_running_event] = await db.query(
-            "SELECT * FROM tb_register_running_events RIGHT JOIN tb_master_locations ON tb_register_running_events.location_id = tb_master_locations.location_id ORDER BY tb_register_running_events.createdAt DESC;"
-        )
-        console.log(response_req_running_event)
-        // let response_req_running_event = await reg_running_event_model.findAll({
-        //     include: {
-        //         model : location_model,
-        //         as : 'location'
-        //     },
-        //     order: [["createdAt", "DESC"]],
-        // })
+        let response_req_running_event = await db.query("CALL Sp_getregrunningeventall()")
+        //call everything due date 
+        let udp_trans = await db.query("CALL Sp_Upd_autoregeventdatedue()")
         if (response_req_running_event) {
             res.json({
                 status: true,
