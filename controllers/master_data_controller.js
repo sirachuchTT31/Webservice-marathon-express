@@ -1,5 +1,5 @@
 let masterlocationModel = require('../models/master_location_model.js')
-
+let error_message = require('../shared/status_message_func.js')
 //location crud
 exports.createLocation = async (req, res) => {
     try {
@@ -26,12 +26,7 @@ exports.createLocation = async (req, res) => {
             }
         }
         else {
-            res.json({
-                status: false,
-                status_code: 400,
-                message: "Value is null bad request",
-                result: null
-            })
+            res.json(error_message.message_error_400)
         }
     }
     catch (e) {
@@ -53,7 +48,7 @@ exports.getallLocation = async (req, res) => {
             })
         }
         else {
-            res.status(500)
+            res.json(error_message.message_error_500)
         }
     }
     catch (e) {

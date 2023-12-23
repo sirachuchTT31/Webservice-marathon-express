@@ -1,5 +1,6 @@
 //bug
 const bcrypt = require('bcryptjs')
+let error_message = require('../shared/status_message_func.js')
 exports.decrypt = async (req, res) => {
     try {
         if (req.body) {
@@ -14,7 +15,7 @@ exports.decrypt = async (req, res) => {
                 })
             }
             else {
-                res.json(400)
+                res.json(error_message.message_error_400)
             }
         }
     }

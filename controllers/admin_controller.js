@@ -2,6 +2,7 @@ const { where } = require('sequelize');
 let adminModel = require('../models/admin_model.js');
 let authModel = require('../models/auth_model.js');
 const bcrypt = require('bcryptjs')
+let error_message = require('../shared/status_message_func.js')
 exports.create = async (req, res) => {
     try {
         if (req.body) {
@@ -49,7 +50,7 @@ exports.create = async (req, res) => {
                     })
                 }
                 else {
-                    res.status(400)
+                    res.json(error_message.message_error_400)
                 }
             }
             else {
@@ -63,11 +64,11 @@ exports.create = async (req, res) => {
 
         }
         else {
-            res.status(500)
+            res.json(error_message.message_error_500)
         }
     }
     catch (e) {
-        res.status(500)
+        res.json(error_message.message_error_500)
         console.log(e)
     }
 }
@@ -108,7 +109,7 @@ exports.update = async (req, res) => {
                 })
             }
             else {
-                res.json(400)
+                res.json(error_message.message_error_400)
             }
         }
         else {
@@ -116,11 +117,7 @@ exports.update = async (req, res) => {
         }
     }
     catch (e) {
-        res.json({
-            status: false,
-            status_code: 500,
-            message: e.message
-        })
+        res.json(error_message.message_error_500)
         console.log(e)
     }
 }
@@ -157,11 +154,11 @@ exports.remove = async (req, res) => {
             }
         }
         else {
-
+            res.json(error_message.message_error_400)
         }
     }
     catch (e) {
-        res.status(500)
+        res.json(error_message.message_error_500)
         console.log(e)
     }
 }
@@ -179,12 +176,12 @@ exports.getAll = async (req, res) => {
             })
         }
         else {
-            res.status(500)
-            res.status(400)
+            res.json(error_message.message_error_400)
         }
 
     }
     catch (e) {
+        res.json(error_message.message_error_500)
         console.log(e)
     }
 }

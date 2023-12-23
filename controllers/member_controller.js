@@ -3,7 +3,7 @@ let authModel = require('../models/auth_model.js')
 // const Cryptr = require('cryptr');
 // const cryptr = new Cryptr('myTotallySecretKey', { encoding: 'base64', pbkdf2Iterations: 10000, saltLength: 10 });
 const bcrypt = require('bcryptjs')
-let { message_status_400_remove } = require('../shared/status_message_func.js')
+let error_message = require('../shared/status_message_func.js')
 exports.create = async (req, res) => {
     try {
         if (req.body) {
@@ -56,16 +56,11 @@ exports.create = async (req, res) => {
                 }
             }
             else {
-                res.json({
-                    status: false,
-                    status_code: 401,
-                    message: "User duplicate Please key new username",
-                    result: null
-                })
+                res.json(error_message.message_error_400)
             }
         }
         else {
-            throw res.status(500)
+            res.json(error_message.message_error_500)
         }
     }
     catch (e) {
@@ -111,11 +106,11 @@ exports.update = async (req, res) => {
             }
         }
         else {
-            res.status(400)
+            res.json(error_message.message_error_400)
         }
     }
     catch (e) {
-        res.status(500)
+        res.json(error_message.message_error_500)
     }
 }
 exports.remove = async (req, res) => {
@@ -150,11 +145,11 @@ exports.remove = async (req, res) => {
             }
         }
         else {
-            res.status(400)
+            res.json(error_message.message_error_400)
         }
     }
     catch (e) {
-        res.status(500)
+        res.json(error_message.message_error_500)
     }
 }
 exports.getAll = async (req, res) => {

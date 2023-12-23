@@ -5,6 +5,7 @@ let fs = require('fs')
 let memberModel = require('../models/member_model.js')
 let authModel = require('../models/auth_model.js')
 let organizerModel = require('../models/organizer_model.js')
+let error_message = require('../shared/status_message_func.js')
 // let { isEmpty } = require('../shared/global_func.js')
 exports.login = async (req, res) => {
     try {
@@ -184,7 +185,7 @@ exports.updateImgprofilemember = async (req, res) => {
         }
     }
     catch (e) {
-        res.status(500)
+        res.json(error_message.message_error_500)
         console.log(e.message)
     }
 }
@@ -225,16 +226,16 @@ exports.updateprofileMember = async (req, res) => {
                 })
             }
             else {
-                res.status(400)
+                res.json(error_message.message_error_400)
             }
         }
         else {
-            res.status(500)
+            res.json(error_message.message_error_500)
         }
     }
     catch (e) {
         console.log(e)
-        res.status(500)
+        res.json(error_message.message_error_500)
     }
 }
 
@@ -244,7 +245,7 @@ exports.getprofileMember = async (req, res) => {
             
         }
         else {
-            res.status(500)
+            res.json(error_message.message_error_500)
         }
     }
     catch (e) {
@@ -299,7 +300,7 @@ exports.registerOrganizer = async (req, res) => {
                     })
                 }
                 else {
-                    res.status(400)
+                    res.json(error_message.message_error_400)
                 }
             }
             else {
@@ -312,7 +313,7 @@ exports.registerOrganizer = async (req, res) => {
             }
         }
         else {
-            res.status(500)
+            res.json(error_message.message_error_500)
         }
     }
     catch (e) {

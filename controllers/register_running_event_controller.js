@@ -1,5 +1,6 @@
 let reg_running_event_model = require('../models/register_running_event_model.js')
 let transactions_model = require('../models/transactions_model.js')
+let error_message = require('../shared/status_message_func.js')
 const db = require('../config/config_db.js')
 let formidable = require('formidable');
 let fs = require('fs')
@@ -45,20 +46,15 @@ exports.create_event = async (req, res) => {
                 }
             }
             else {
-                res.json({
-                    status: false,
-                    status_code: 400,
-                    message: "Error transaction request failed",
-                    result: null
-                })
+                res.json(error_message.message_error_400)
             }
         }
         else {
-            res.status(500)
+            res.json(error_message.message_error_500)
         }
     }
     catch (e) {
-        res.status(500)
+        res.json(error_message.message_error_500)
     }
 }
 
@@ -97,12 +93,15 @@ exports.uploadimg_event = async (req, res) => {
                             result: null,
                         })
                     }
+                    else {
+                        res.json(error_message.message_error_400)
+                    }
                 })
             })
         }
     }
     catch (e) {
-        res.status(500)
+        res.json(error_message.message_error_500)
     }
 }
 
@@ -112,7 +111,7 @@ exports.getregbyOrganizer = async (req, res) => {
         //     if (req.body.organ_id != null) {
         let _id = req.params.id
         console.log("_id", _id)
-        let query_reg = await db.query('CALL Sp_getregbyorganizer(' + "'" + _id + "'" + ')')
+        let query_reg = await db.query('CALL Sp_get_regbyorganizer(' + "'" + _id + "'" + ')')
         if (query_reg) {
             res.json({
                 status: true,
@@ -122,7 +121,7 @@ exports.getregbyOrganizer = async (req, res) => {
             })
         }
         else {
-            res.status(400)
+            res.json(error_message.message_error_400)
         }
         //     }
         // }
@@ -131,15 +130,15 @@ exports.getregbyOrganizer = async (req, res) => {
         // }
     }
     catch (e) {
-        res.status(500)
+        res.json(error_message.message_error_500)
     }
 }
 
 exports.getAll = async (req, res) => {
     try {
-        let response_req_running_event = await db.query("CALL Sp_getregrunningeventall()")
+        let response_req_running_event = await db.query("CALL Sp_get_regrunningeventall()")
         //call everything due date 
-        let udp_trans = await db.query("CALL Sp_Upd_autoregeventdatedue()")
+        let udp_trans = await db.query("CALL Sp_upd_autoregeventdatedue()")
         if (response_req_running_event) {
             res.json({
                 status: true,
@@ -149,14 +148,13 @@ exports.getAll = async (req, res) => {
             })
         }
         else {
-            res.status(400)
+            res.json(error_message.message_error_400)
         }
     }
     catch (e) {
-        res.status(500)
+        res.json(error_message.message_error_500)
     }
 }
-
 
 exports.getbyId = async (req, res) => {
     try {
@@ -166,7 +164,7 @@ exports.getbyId = async (req, res) => {
                 reg_event_id: _id
             }
         })
-        if (response_reg_running_event_where_Id != null) {
+        if (response_reg_running_event_where_Id.length > 0) {
             res.json({
                 status: true,
                 status_code: 200,
@@ -174,8 +172,32 @@ exports.getbyId = async (req, res) => {
                 result: response_reg_running_event_where_Id
             })
         }
+        else {
+            res.json(error_message.message_error_400)
+        }
     }
     catch (e) {
-        res.status(500)
+        res.json(error_message.message_error_500)
+    }
+}
+
+exports.getregbyApprover = async (req, res) => {
+    try {
+
+        let res_approver = await db.query(`CALL Sp_get_regrunningeventapprover()`)
+        if (res_approver.length > 0) {
+            res.json({
+                status: true,
+                status_code: 200,
+                message: 'Select register_running_event by approver successfully',
+                result: res_approver
+            })
+        }
+        else {
+            res.json(error_message.message_error_400)
+        }
+    }
+    catch (e) {
+        res.json(error_message.message_error_500)
     }
 }
