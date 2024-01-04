@@ -19,39 +19,50 @@ exports.login = async (req, res) => {
             let new_auth_obj = {}
             new_auth_obj = auth_obj[0].dataValues
             let matchPassword = await bcrypt.compare(password, new_auth_obj.password)
-            if (!matchPassword) {
-                res.json({
-                    status: false,
-                    status_code: 400,
-                    message: 'Password mismatch !',
-                    result: null
-                })
+            // check status is equal Y OR N OR B 
+            if (new_auth_obj.access_status == "Y") {
+                if (!matchPassword) {
+                    res.json({
+                        status: false,
+                        status_code: 400,
+                        message: 'Password mismatch !',
+                        result: null
+                    })
+                }
+                else {
+                    let payload = {
+                        _id: new_auth_obj.auth_id,
+                        username: new_auth_obj.username,
+                        name: new_auth_obj.name,
+                        lastname: new_auth_obj.lastname,
+                        avatar: new_auth_obj.avatar,
+                        role: new_auth_obj.role
+                    }
+                    jwt.sign(payload, 'jwtsecret', { expiresIn: 6000000000000000 }, (err, token) => {
+                        if (err) {
+                            throw err;
+                        }
+                        else {
+                            res.json({
+                                status: true,
+                                status_code: 200,
+                                message: 'Login successfully',
+                                result: {
+                                    token: token,
+                                    payload: payload,
+                                    time_out_token: 6000000000000000
+                                },
+                            })
+                        }
+                    })
+                }
             }
             else {
-                let payload = {
-                    _id: new_auth_obj.auth_id,
-                    username: new_auth_obj.username,
-                    name: new_auth_obj.name,
-                    lastname: new_auth_obj.lastname,
-                    avatar: new_auth_obj.avatar,
-                    role: new_auth_obj.role
-                }
-                jwt.sign(payload, 'jwtsecret', { expiresIn: 6000000000000000 }, (err, token) => {
-                    if (err) {
-                        throw err;
-                    }
-                    else {
-                        res.json({
-                            status: true,
-                            status_code: 200,
-                            message: 'Login successfully',
-                            result: {
-                                token: token,
-                                payload: payload,
-                                time_out_token: 6000000000000000
-                            },
-                        })
-                    }
+                res.json({
+                    status: false,
+                    status_code: 204,
+                    message: "Account not approved or block account contact administrator",
+                    result: null
                 })
             }
         }
@@ -92,10 +103,11 @@ exports.registerMember = async (req, res) => {
                     member_password: encryptedPassword,
                     member_name: req.body.member_name,
                     member_lastname: req.body.member_lastname,
-                    member_tel: req.body.member_tel,
-                    member_address: req.body.member_address,
+                    member_tel: "",
+                    member_address: "",
                     member_email: req.body.member_email,
-                    member_avatar: req.body.member_avatar,
+                    member_avatar: "",
+                    member_status: "Y",
                     role: "member"
                 }
                 let new_auth_obj = {
@@ -104,7 +116,8 @@ exports.registerMember = async (req, res) => {
                     password: new_member.member_password,
                     name: new_member.member_name,
                     lastname: new_member.member_lastname,
-                    avatar: new_member.member_avatar,
+                    avatar: "",
+                    access_status: "Y",
                     role: new_member.role,
                 }
                 let response_auth = await authModel.create(new_auth_obj)
@@ -242,7 +255,7 @@ exports.updateprofileMember = async (req, res) => {
 exports.getprofileMember = async (req, res) => {
     try {
         if (isEmpty(req.body.member_id)) {
-            
+
         }
         else {
             res.json(error_message.message_error_500)
@@ -274,10 +287,11 @@ exports.registerOrganizer = async (req, res) => {
                     organ_password: encryptedPassword,
                     organ_name: req.body.organ_name,
                     organ_lastname: req.body.organ_lastname,
-                    organ_tel: req.body.organ_tel,
-                    organ_address: req.body.organ_address,
+                    organ_tel: "",
+                    organ_address: "",
                     organ_email: req.body.organ_email,
-                    organ_avatar: req.body.organ_avatar,
+                    organ_avatar: "",
+                    organ_status: "N",
                     role: "organizer",
                 }
                 let new_auth_obj = {
@@ -286,7 +300,8 @@ exports.registerOrganizer = async (req, res) => {
                     password: new_organizer.organ_password,
                     name: new_organizer.organ_name,
                     lastname: new_organizer.organ_lastname,
-                    avatar: new_organizer.organ_avatar,
+                    avatar: "",
+                    access_status: "N",
                     role: new_organizer.role,
                 }
                 let response_organizer = await organizerModel.create(new_organizer)

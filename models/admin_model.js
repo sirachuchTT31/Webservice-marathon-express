@@ -11,6 +11,7 @@ const admin = db.define('tb_admins', {
     admin_address: { type: sequelize.STRING },
     admin_email: { type: sequelize.STRING },
     admin_avatar: { type: sequelize.STRING },
+    admin_status: { type: sequelize.STRING },
     role: { type: sequelize.STRING },
 })
 

@@ -11,6 +11,7 @@ const organizer = db.define('tb_organizers', {
     organ_address: { type: sequelize.STRING },
     organ_email: { type: sequelize.STRING },
     organ_avatar: { type: sequelize.STRING },
+    organ_status : { type: sequelize.STRING },
     role: { type: sequelize.STRING },
 })
 

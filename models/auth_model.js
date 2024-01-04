@@ -7,6 +7,7 @@ const authenticate = db.define('tb_authentications', {
     name: { type: sequelize.STRING },
     lastname: { type: sequelize.STRING },
     avatar: { type: sequelize.STRING },
+    access_status: { type: sequelize.STRING },
     role: { type: sequelize.STRING }
 })
 module.exports = authenticate

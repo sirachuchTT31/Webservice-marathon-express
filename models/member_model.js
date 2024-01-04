@@ -11,6 +11,7 @@ const Member = db.define('tb_members', {
     member_address: { type: sequelize.STRING },
     member_email: { type: sequelize.STRING },
     member_avatar: { type: sequelize.STRING },
+    member_status: { type: sequelize.STRING },
     role: { type: sequelize.STRING },
 })
 
