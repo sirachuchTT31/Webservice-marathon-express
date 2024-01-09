@@ -181,23 +181,3 @@ exports.getbyId = async (req, res) => {
     }
 }
 
-exports.getregbyApprover = async (req, res) => {
-    try {
-
-        let res_approver = await db.query(`CALL Sp_get_regrunningeventapprover()`)
-        if (res_approver.length > 0) {
-            res.json({
-                status: true,
-                status_code: 200,
-                message: 'Select register_running_event by approver successfully',
-                result: res_approver
-            })
-        }
-        else {
-            res.json(error_message.message_error_400)
-        }
-    }
-    catch (e) {
-        res.json(error_message.message_error_500)
-    }
-}

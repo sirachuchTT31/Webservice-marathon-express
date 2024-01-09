@@ -106,7 +106,7 @@ exports.registerMember = async (req, res) => {
                     member_tel: "",
                     member_address: "",
                     member_email: req.body.member_email,
-                    member_avatar: "",
+                    member_avatar: "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Round&hairColor=BrownDark&facialHairType=BeardMedium&facialHairColor=BrownDark&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light",
                     member_status: "Y",
                     role: "member"
                 }
@@ -116,7 +116,7 @@ exports.registerMember = async (req, res) => {
                     password: new_member.member_password,
                     name: new_member.member_name,
                     lastname: new_member.member_lastname,
-                    avatar: "",
+                    avatar: "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Round&hairColor=BrownDark&facialHairType=BeardMedium&facialHairColor=BrownDark&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light",
                     access_status: "Y",
                     role: new_member.role,
                 }
@@ -290,7 +290,7 @@ exports.registerOrganizer = async (req, res) => {
                     organ_tel: "",
                     organ_address: "",
                     organ_email: req.body.organ_email,
-                    organ_avatar: "",
+                    organ_avatar: "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Round&hairColor=BrownDark&facialHairType=BeardMedium&facialHairColor=BrownDark&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light",
                     organ_status: "N",
                     role: "organizer",
                 }
@@ -300,7 +300,7 @@ exports.registerOrganizer = async (req, res) => {
                     password: new_organizer.organ_password,
                     name: new_organizer.organ_name,
                     lastname: new_organizer.organ_lastname,
-                    avatar: "",
+                    avatar: "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Round&hairColor=BrownDark&facialHairType=BeardMedium&facialHairColor=BrownDark&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light",
                     access_status: "N",
                     role: new_organizer.role,
                 }
