@@ -18,6 +18,12 @@ message_error =
         status_code: 401,
         message: "HTTP 401 Unauthorized Error",
         result: null
+    },
+    message_error_204 : {
+        status: true,
+        status_code: 204,
+        message: "No content",
+        result: null
     }
 }
 

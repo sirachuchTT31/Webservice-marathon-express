@@ -3,6 +3,7 @@ let transactions_model = require('../models/transactions_model.js')
 let error_message = require('../shared/status_message_func.js')
 const db = require('../config/config_db.js')
 let formidable = require('formidable');
+let task_apv_running_event_model = require('../models/task_approver_reg_event_model.js')
 let fs = require('fs')
 exports.create_event = async (req, res) => {
     try {

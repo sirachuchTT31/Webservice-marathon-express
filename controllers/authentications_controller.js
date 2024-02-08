@@ -333,5 +333,6 @@ exports.registerOrganizer = async (req, res) => {
     }
     catch (e) {
         console.log(e)
+        throw e
     }
 }
