@@ -1,28 +1,29 @@
+const http_status =  require('http-status-codes')
 message_error =
 {
     message_error_400: {
         status: false,
-        status_code: 400,
-        message: "Bad request",
+        status_code: http_status.StatusCodes.BAD_REQUEST,
+        message: http_status.ReasonPhrases.BAD_REQUEST,
         result: null,
     },
 
     message_error_500: {
         status: false,
-        status_code: 500,
-        message: "Internal Server Error",
+        status_code: http_status.StatusCodes.INTERNAL_SERVER_ERROR,
+        message: http_status.ReasonPhrases.INTERNAL_SERVER_ERROR,
         result: null
     },
     message_error_401: {
         status: false,
-        status_code: 401,
-        message: "HTTP 401 Unauthorized Error",
+        status_code: http_status.StatusCodes.UNAUTHORIZED	,
+        message: http_status.ReasonPhrases.UNAUTHORIZED,
         result: null
     },
     message_error_204 : {
         status: true,
-        status_code: 204,
-        message: "No content",
+        status_code: http_status.StatusCodes.NO_CONTENT,
+        message: http_status.ReasonPhrases.NO_CONTENT,
         result: null
     }
 }

@@ -1,6 +1,8 @@
 let error_message = require('../shared/status_message_func.js')
 let register_running_member_model = require('../models/register_running_members_model.js')
 let transactions_model = require('../models/transactions_model.js')
+const db = require('../config/config_db.js')
+const _ = require('underscore');
 exports.create_running_member = async (req, res) => {
     try {
         if (req.body) {
@@ -47,6 +49,33 @@ exports.create_running_member = async (req, res) => {
         }
         else {
             res.json(error_message.message_error_500)
+        }
+    }
+    catch (e) {
+        res.json(error_message.message_error_500)
+    }
+}
+
+//GET HISTORY MEMBERS
+exports.get_history_members = async (req, res) => {
+    try {
+        if (req.params.id) {
+            let auth_id = req.params.id
+            let results = await db.query('CALL Sp_get_historybymember(' + "'" + auth_id + "'" + ")")
+            if (!_.isEmpty(results)) {
+                res.json({
+                    status: true,
+                    status_code: 200,
+                    message: 'Get history members successfully',
+                    result: results
+                })
+            }
+            else {
+                res.json(error_message.message_error_400)
+            }
+        }
+        else {
+            res.json(error_message.message_error_400)
         }
     }
     catch (e) {
