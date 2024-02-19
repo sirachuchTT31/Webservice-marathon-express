@@ -67,7 +67,7 @@ exports.get_history_members = async (req, res) => {
                     status: true,
                     status_code: 200,
                     message: 'Get history members successfully',
-                    result: results
+                    results: results
                 })
             }
             else {
