@@ -4,6 +4,7 @@ let error_message = require('../shared/status_message_func.js')
 const db = require('../config/config_db.js')
 let formidable = require('formidable');
 let task_apv_running_event_model = require('../models/task_approver_reg_event_model.js')
+const _ = require('underscore');
 let fs = require('fs')
 exports.create_event = async (req, res) => {
     try {
@@ -171,6 +172,28 @@ exports.getbyId = async (req, res) => {
                 status_code: 200,
                 message: 'Select register_running_event by Id successfully',
                 result: response_reg_running_event_where_Id
+            })
+        }
+        else {
+            res.json(error_message.message_error_400)
+        }
+    }
+    catch (e) {
+        res.json(error_message.message_error_500)
+    }
+}
+
+exports.update_status_before_reject__event = async (req, res) => {
+    try {
+        if (req.body) {
+            let trans_id = req.body.trans_id
+            let status = req.body.reg_event_status
+            let response = await db.query('CALL Sp_upd_regeditstatusrejectbyorganizer(' + "'" + status + "'" + "," + "'" + trans_id + "'" + ")")
+            res.json({
+                status: true,
+                status_code: 200,
+                message: 'Edit data successfully',
+                results: null
             })
         }
         else {
