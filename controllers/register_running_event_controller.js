@@ -60,6 +60,46 @@ exports.create_event = async (req, res) => {
     }
 }
 
+exports.update_event = async (req, res) => {
+    try {
+        if (req.body) {
+            let data = req?.body
+            let response = await reg_running_event_model?.update(
+                {
+                    reg_event_name: data?.reg_event_name,
+                    reg_event_due_date: data?.reg_event_due_date,
+                    reg_event_price: data?.reg_event_price,
+                    reg_event_amount: data?.reg_event_amount,
+                    reg_event_detail: data?.reg_event_detail,
+                    reg_event_distance: data?.reg_event_distance,
+                    location_id: data?.location_id
+                },
+                {
+                    where: {
+                        reg_event_id: data?.reg_event_id
+                    }
+                }
+            )
+            if (!_.isEmpty(response)) {
+                res.json({
+                    status: true,
+                    status_code: 200,
+                    message: 'Update data successfully',
+                    results: response
+                })
+            }
+            else {
+                res.json(error_message.message_error_400)
+            }
+        }
+        else {
+            res.json(error_message.message_error_400)
+        }
+    }
+    catch (e) {
+        res.json(error_message.message_error_500)
+    }
+}
 exports.uploadimg_event = async (req, res) => {
     try {
         if (req.body) {
@@ -183,12 +223,12 @@ exports.getbyId = async (req, res) => {
     }
 }
 
-exports.update_status_before_reject__event = async (req, res) => {
+exports.update_status_event= async (req, res) => {
     try {
         if (req.body) {
-            let trans_id = req.body.trans_id
+            let reg_event_id = req.body.reg_event_id
             let status = req.body.reg_event_status
-            let response = await db.query('CALL Sp_upd_regeditstatusrejectbyorganizer(' + "'" + status + "'" + "," + "'" + trans_id + "'" + ")")
+            let response = await db.query('CALL Sp_upd_statusregevent(' + "'" + status + "'" + "," + "'" + reg_event_id + "'" + ")")
             res.json({
                 status: true,
                 status_code: 200,
