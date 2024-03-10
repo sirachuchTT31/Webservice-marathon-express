@@ -1,11 +1,13 @@
-const { where } = require('sequelize');
+
 let adminModel = require('../models/admin_model.js');
 let authModel = require('../models/auth_model.js');
 const bcrypt = require('bcryptjs')
 let error_message = require('../shared/status_message_func.js')
+const { createAdminValidate } = require('../validate/admin.js')
 exports.create = async (req, res) => {
     try {
-        if (req.body) {
+        const { value, error } = createAdminValidate.validate(req.body)
+        if (!error) {
             let checkDuplicate = await adminModel.findAll({
                 where: {
                     admin_username: req.body.admin_username
@@ -28,6 +30,7 @@ exports.create = async (req, res) => {
                     admin_address: req.body.admin_address,
                     admin_email: req.body.admin_email,
                     admin_avatar: req.body.admin_avatar,
+                    admin_status : 'N',
                     role: "admin",
                 }
                 let new_auth_obj = {
@@ -37,6 +40,7 @@ exports.create = async (req, res) => {
                     name: newAdmin.admin_name,
                     lastname: newAdmin.admin_lastname,
                     avatar: newAdmin.admin_avatar,
+                    access_status : 'N',
                     role: newAdmin.role,
                 }
                 let response_admin = await adminModel.create(newAdmin)
@@ -74,7 +78,7 @@ exports.create = async (req, res) => {
 }
 exports.update = async (req, res) => {
     try {
-        if (req.body ) {
+        if (req.body) {
             let _id = req.body.admin_id
             //fetch update 
             let rs_admin = await adminModel.update({
@@ -123,7 +127,7 @@ exports.update = async (req, res) => {
 }
 exports.remove = async (req, res) => {
     try {
-        if (req.body.admin_id ) {
+        if (req.body.admin_id) {
             let params = req.body.admin_id
             console.log(params)
             let new_admin = await adminModel.destroy({
