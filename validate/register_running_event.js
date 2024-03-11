@@ -1,0 +1,17 @@
+const Joi = require('joi') 
+
+const createValidate = Joi.object().keys({
+    reg_event_name : Joi.string().required(),
+    reg_event_due_date : Joi.date().required(),
+    reg_event_price : Joi.any().required(),
+    reg_event_amount : Joi.any().required(),
+    reg_event_detail : Joi.string().required(),
+    reg_event_distance : Joi.string().required(),
+    reg_event_path_img : Joi.string().required(),
+    location_id : Joi.string().required()
+})
+
+
+module.exports = {
+    createValidate
+}
