@@ -6,9 +6,13 @@ let formidable = require('formidable');
 let task_apv_running_event_model = require('../models/task_approver_reg_event_model.js')
 const _ = require('underscore');
 let fs = require('fs')
+const validate = require('../validate/register_running_event.js')
 exports.create_event = async (req, res) => {
     try {
-        if (req.body) {
+        const { value, error } = validate.createValidate.validate(req.body)
+        console.log(value)
+        console.log('e',error)
+        if (!error) {
             let todo = "Waiting_for_approval_organizer_01"
             let reg_id_auto_complies = "REG_EVENT"
             let trans_id_auto_complies = "TRANS"
@@ -172,6 +176,7 @@ exports.getregbyOrganizer = async (req, res) => {
         // }
     }
     catch (e) {
+        console.log(e)
         res.json(error_message.message_error_500)
     }
 }
@@ -223,7 +228,7 @@ exports.getbyId = async (req, res) => {
     }
 }
 
-exports.update_status_event= async (req, res) => {
+exports.update_status_event = async (req, res) => {
     try {
         if (req.body) {
             let reg_event_id = req.body.reg_event_id

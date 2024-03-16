@@ -7,8 +7,9 @@ const createValidate = Joi.object().keys({
     reg_event_amount : Joi.any().required(),
     reg_event_detail : Joi.string().required(),
     reg_event_distance : Joi.string().required(),
-    reg_event_path_img : Joi.string().required(),
-    location_id : Joi.string().required()
+    reg_event_path_img : Joi.string().allow(null).allow(''),
+    location_id : Joi.string().required(),
+    auth_id : Joi.string().required()
 })
 
 

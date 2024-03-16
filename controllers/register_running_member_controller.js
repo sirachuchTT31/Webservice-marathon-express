@@ -5,6 +5,7 @@ const db = require('../config/config_db.js')
 const _ = require('underscore');
 exports.create_running_member = async (req, res) => {
     try {
+        
         if (req.body) {
             let todo = "Waiting_for_organizer_approver_11"
             let reg_id_auto_complies = "REG_MEMBER_RUNNING"
